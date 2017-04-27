@@ -2,14 +2,14 @@
 %global oslc_licenses_dir %{_datadir}/oslc-%{oslc_ver}/licenses/
 
 Summary: Tool to find out project's licences
-Name: cucos-license-check
+Name:    license-check
 Version: 0.3
-Release: 1%{?dist}
-License: GPLv2+
-URL: https://gitlab.cee.redhat.com/cucos/data-mining-tools/tree/master/license-check-worker
+Release: 2%{?dist}
+License: ASL 2.0
+URL:     https://github.com/fabric8-analytics/license-check
 
 # ./make_archive.sh
-Source0: cucos-license-check-%{version}.tar.gz
+Source0: license-check-%{version}.tar.gz
 
 BuildArch: noarch
 
@@ -23,7 +23,7 @@ Goal of this tool is to find out licences used by project and potentially some l
 
 %install
 mkdir -p %{buildroot}%{_bindir}
-cp -av cucos_license_check.py %{buildroot}%{_bindir}
+cp -av license_check.py %{buildroot}%{_bindir}
 
 mkdir -p %{buildroot}%{_datadir}/%{name}
 cp -av pelc-packages-fixtures-license.json %{buildroot}%{_datadir}/%{name}
@@ -34,10 +34,13 @@ rm -f %{oslc_licenses_dir}{crc32,diffmark}.*
 
 %files
 %doc README.md
-%{_bindir}/cucos_license_check.py
+%{_bindir}/license_check.py
 %{_datadir}/%{name}/pelc-packages-fixtures-license.json
 
 %changelog
+* Thu Apr 27 2017 Jiri Popelka <jpopelka@redhat.com> - 0.3-2
+- renamed to license-check
+
 * Tue Sep 13 2016 Slavek Kabrda <bkabrda@redhat.com> - 0.3-1
 - 'details.license_stats[N].count` is now integer, not string
 

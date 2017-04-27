@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NAME=cucos-license-check
+NAME=license-check
 
 # get version
 VERSION_MAJOR=0
@@ -11,7 +11,7 @@ VERSION="${VERSION_MAJOR}.${VERSION_MINOR}"
 archive_dir="${NAME}-${VERSION}"
 mkdir -p "$archive_dir/"
 cp -r \
-   cucos_license_check.py \
+   license_check.py \
    pelc-packages-fixtures-license.json \
    README.md \
    "$archive_dir/"

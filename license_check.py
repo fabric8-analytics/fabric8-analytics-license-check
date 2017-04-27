@@ -21,7 +21,7 @@ def parse_pelc_licenses(path):
     file_name = 'pelc-packages-fixtures-license.json'
 
     if path is None:
-        path = os.path.join('/usr/share/cucos-license-check/', file_name)
+        path = os.path.join('/usr/share/license-check/', file_name)
 
     if not os.path.exists(path):
         path = os.path.join(os.path.dirname(__file__), file_name)
