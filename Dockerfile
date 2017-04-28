@@ -1,4 +1,4 @@
-# Docker container that tests the cucos_license_check.py
+# Docker container that tests the license_check.py
 
 FROM fedora:23
 
@@ -14,9 +14,9 @@ RUN cd /root && ./get_oslc.sh
 ADD new_licences/* /usr/share/oslc-3.0/licenses/
 
 # main worker script that returns JSON
-ADD cucos_license_check.py /root/
+ADD license_check.py /root/
 
 # sources must be available on expected place
-CMD ["/root/cucos_license_check.py", "/tmp/sources" ]
+CMD ["/root/license_check.py", "/tmp/sources" ]
 
 

@@ -19,17 +19,17 @@ Other tools work on basis of comparing texts of licences by some fulltext algori
 
 Currently, this tool combines `oslc` with Fedora licences. The tool also returns specific output for files that include "license" in its name, which usually means this file is a license file.
 
-## Running license check
+## Running license-check
 
 For running the tool, you need to have the sources already unpacked in some directory. Then, run:
 
 ```
-./cucos_license_check.py <sources-dir>
+./license_check.py <sources-dir>
 ```
 
-### Dockerfile for licensecheck
+### Dockerfile for license-check
 
-For easier running the licensecheck, there is a Dockerfile that can be used to build a container that works like this:
+For easier running the license-check, there is a Dockerfile that can be used to build a container that works like this:
 
 ```
 docker build -t license-checker-test .
@@ -38,12 +38,9 @@ docker run --rm -ti -v /path/to/sources:/tmp/sources license-checker-test
 
 ### RPMs
 
-RPMs for Fedora are in internal COPR repo: https://copr.devel.redhat.com/coprs/jpopelka/cucos-license-check
+RPMs for Fedora are in COPR repo: https://copr.fedorainfracloud.org/coprs/jpopelka/license-check
 
-The same repository also contains oslc, which is just rebuilt http://download.eng.brq.redhat.com/brewroot/packages/oslc
-
-If you need to rebuild cucos-license-check or oslc, request permissions:
-https://copr.devel.redhat.com/coprs/jpopelka/cucos-license-check/permissions/
+The same repository also contains oslc.
 
 ## Example output of the license check
 

@@ -9,7 +9,7 @@ if [ $# -ne 1 ] ; then
     usage
 fi
 
-NAME=cucos-license-check
+NAME=license-check
 RPMBUILD_DIR=~/rpmbuild
 
 tar=$(./make_archive.sh)
