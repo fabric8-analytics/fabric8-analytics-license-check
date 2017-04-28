@@ -118,3 +118,8 @@ The command above returns JSON like the following. It uses quite simple structur
     }
 }
 ```
+
+## Contributing
+
+See our [contributing guidelines](https://github.com/fabric8-analytics/common/blob/master/CONTRIBUTING.md) for more info.
+ 
