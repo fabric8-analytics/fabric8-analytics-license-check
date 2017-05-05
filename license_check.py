@@ -134,15 +134,15 @@ def parse_oslc_output(source, output, result, pelc_license_mapping):
                 status = P_FILES
                 continue
             try:
-                licence_info = line.split()
-                variant_id = licence_info[0]
+                license_info = line.split()
+                variant_id = license_info[0]
                 license_name = get_pelc_license_name(variant_id,
                                                      pelc_license_mapping)
                 if unwanted_license(license_name):
                     continue
                 result['license_stats'].append({'variant_id': variant_id,
                                                 'license_name': license_name,
-                                                'count': int(licence_info[1])})
+                                                'count': int(license_info[1])})
             except (KeyError, ValueError):
                 print("Error: bad format of LICENSE STATS output on line {}:".format(lnumber))
                 print(line)
@@ -159,20 +159,20 @@ def parse_oslc_output(source, output, result, pelc_license_mapping):
                 # split according last ':' character
                 lp = line.split(':')
                 fname = ':'.join(lp[:-1])
-                licences = lp[-1]
+                licenses = lp[-1].strip()
 
-                # start with empty list of licences
-                result_licences = []
+                # start with empty list of licenses
+                result_licenses = []
 
                 # Ignore empty lines and those where output indicates no matches
-                if (not len(licences.strip()) or
+                if (not len(licenses) or
                         re.search(': No matches$', line)):
                     continue
 
                 # split information for particular licenses for specific file
                 license_match = None
                 per_file_pattern = '([\w\._-]+) \(([0-9]+)%\)( incompatible with \(([^\)*]+)\))?'
-                for license_match in re.finditer(per_file_pattern, licences):
+                for license_match in re.finditer(per_file_pattern, licenses):
                     match = int(license_match.group(2))
                     if match < OSLC_TRESHOLD:
                         continue
@@ -184,12 +184,12 @@ def parse_oslc_output(source, output, result, pelc_license_mapping):
                     license_info = {'variant_id': variant_id,
                                     'license_name': license_name,
                                     'match': match}
-                    result_licences.append(license_info)
+                    result_licenses.append(license_info)
                 if license_match is None:
                     # sometimes there is no percent from unknown reason, in that case
                     # split it only and check whether it matches some file
-                    if licences.find('incompatible') == -1:
-                        for lic in licences.split(','):
+                    if licenses.find('incompatible') == -1:
+                        for lic in licenses.split(','):
                             sample_path = '/usr/share/oslc-3.0/licenses/{0}.txt'
                             variant_id = lic.strip()
                             if os.path.exists(sample_path.format(variant_id)):
@@ -199,13 +199,13 @@ def parse_oslc_output(source, output, result, pelc_license_mapping):
                                     continue
                                 license_info = {'variant_id': variant_id,
                                                 'license_name': license_name}
-                                result_licences.append(license_info)
+                                result_licenses.append(license_info)
 
-                if len(result_licences) > 0:
+                if len(result_licenses) > 0:
                     # either add license to existing list or create new list
                     if fname not in result['files']:
                         result['files'][fname] = []
-                    result['files'][fname] += result_licences
+                    result['files'][fname] += result_licenses
 
             except (KeyError, ValueError):
                 print("Error: bad format of FILES output on line {}:".format(lnumber))
