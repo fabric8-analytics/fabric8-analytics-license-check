@@ -35,8 +35,7 @@ def parse_pelc_licenses(path):
                 if d["model"] == "packages.license":
                     short_names[d["pk"]] = d["fields"]["short_name"]
     except IOError:
-        print("Error: Unable to open license mapping file: %r"\
-            %os.path.abspath(path))
+        print("Error: Unable to open license mapping file: %r" % os.path.abspath(path))
         exit(1)
 
     matching = {}
@@ -46,6 +45,7 @@ def parse_pelc_licenses(path):
 
     return matching
 
+
 def get_pelc_license_name(lic, pelc_license_mapping):
     lic = lic.strip()
     pelc_license_name = pelc_license_mapping.get(lic)
@@ -53,6 +53,7 @@ def get_pelc_license_name(lic, pelc_license_mapping):
         print("Error: unknown to PELC license %r" % lic)
         pelc_license_name = lic + " (unknown to PELC)"
     return pelc_license_name
+
 
 def parse_oslc_output(source, output, result, pelc_license_mapping):
     """
@@ -103,7 +104,7 @@ def parse_oslc_output(source, output, result, pelc_license_mapping):
                 status = P_FHEAD
             else:
                 try:
-                    (k,v) = line.split(':')
+                    (k, v) = line.split(':')
                     result['oslc_stats'][k] = int(v.strip())
                 except (KeyError, ValueError):
                     print("Error: bad format of STATS output on line {}:".format(lnumber))
@@ -223,14 +224,16 @@ def get_stats(result):
 
     return result
 
+
 def print_result(result, pretty=False):
     if pretty:
-        print (json.dumps(result, sort_keys=True, indent=4, separators=(',', ': ')))
+        print(json.dumps(result, sort_keys=True, indent=4, separators=(',', ': ')))
     else:
-        print (json.dumps(result))
+        print(json.dumps(result))
 #    print ("Files with license: {}".format(len(result['files'])))
 #     for f in result['files'].keys():
 #         print(f)
+
 
 def run_oslc(source, result, pelc_license_mapping):
     cmd = ['oslccli', '-s', '-d', os.path.abspath(source)]
@@ -243,6 +246,7 @@ def run_oslc(source, result, pelc_license_mapping):
 
     return parse_oslc_output(source, output, result, pelc_license_mapping)
 
+
 def main():
     parser = argparse.ArgumentParser(description='License check tool')
     parser.add_argument('source', metavar='path',
@@ -252,7 +256,7 @@ def main():
     parser.add_argument('--pretty', help='Show nicely formatted output', action='store_true')
     parser.add_argument('--mapping-path', help='Specify where is license mapping stored')
     args = parser.parse_args()
-    result = {'oslc_stats':{}, 'summary':{}, 'files': {}, 'license_stats':[]}
+    result = {'oslc_stats': {}, 'summary': {}, 'files': {}, 'license_stats': []}
     pelc_license_mapping = parse_pelc_licenses(args.mapping_path)
     result = run_oslc(args.source, result, pelc_license_mapping)
     result = get_stats(result)
