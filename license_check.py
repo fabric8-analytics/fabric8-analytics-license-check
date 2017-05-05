@@ -12,12 +12,11 @@ import json
 import re
 from collections import defaultdict
 
-# file is downloaded from https://code.engineering.redhat.com/gerrit/gitweb?p=pelc.git;a=blob;f=pelc/packages/fixtures/license.json;h=6d1c1adeada20b48dc21b4ebf76228c52bc3db43;hb=develop
-# there should be up to date infos, for future we should implement way how to download it
-# and cache it somehow, because now during each license check I parse it
+
 def parse_pelc_licenses(path):
     variants = defaultdict(set)
     short_names = {}
+    # downloaded from internal Red Hat PELC repository
     file_name = 'pelc-packages-fixtures-license.json'
 
     if path is None:
