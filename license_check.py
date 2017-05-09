@@ -59,10 +59,6 @@ def get_pelc_license_name(lic, pelc_license_mapping):
     return pelc_license_name
 
 
-def unwanted_license(short_name):
-    return short_name in ['Forbidden Phrase']
-
-
 def parse_oslc_output(source, output, result, pelc_license_mapping):
     """
     Output of oslc looks like this:
@@ -138,8 +134,6 @@ def parse_oslc_output(source, output, result, pelc_license_mapping):
                 variant_id = license_info[0]
                 license_name = get_pelc_license_name(variant_id,
                                                      pelc_license_mapping)
-                if unwanted_license(license_name):
-                    continue
                 result['license_stats'].append({'variant_id': variant_id,
                                                 'license_name': license_name,
                                                 'count': int(license_info[1])})
@@ -179,8 +173,6 @@ def parse_oslc_output(source, output, result, pelc_license_mapping):
                     variant_id = license_match.group(1)
                     license_name = get_pelc_license_name(variant_id,
                                                          pelc_license_mapping)
-                    if unwanted_license(license_name):
-                        continue
                     license_info = {'variant_id': variant_id,
                                     'license_name': license_name,
                                     'match': match}
@@ -195,8 +187,6 @@ def parse_oslc_output(source, output, result, pelc_license_mapping):
                             if os.path.exists(sample_path.format(variant_id)):
                                 license_name = get_pelc_license_name(variant_id,
                                                                      pelc_license_mapping)
-                                if unwanted_license(license_name):
-                                    continue
                                 license_info = {'variant_id': variant_id,
                                                 'license_name': license_name}
                                 result_licenses.append(license_info)

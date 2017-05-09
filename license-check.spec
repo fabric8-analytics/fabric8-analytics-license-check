@@ -4,7 +4,7 @@
 Summary: Tool to find out project's licences
 Name:    license-check
 Version: 0.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: ASL 2.0
 URL:     https://github.com/fabric8-analytics/license-check
 
@@ -30,7 +30,7 @@ cp -av pelc-packages-fixtures-license.json %{buildroot}%{_datadir}/%{name}
 
 %posttrans
 # remove some weird license matches that produce too many false positives
-rm -f %{oslc_licenses_dir}{crc32,diffmark}.*
+rm -f %{oslc_licenses_dir}{crc32,diffmark,license-f,copyright-f,clearsilver}.*
 
 %files
 %doc README.md
@@ -38,6 +38,10 @@ rm -f %{oslc_licenses_dir}{crc32,diffmark}.*
 %{_datadir}/%{name}/pelc-packages-fixtures-license.json
 
 %changelog
+* Tue May 09 2017 Jiri Popelka <jpopelka@redhat.com> - 0.3-4
+- Fix the 'Forbidden Phrase' issue in oslc
+- Remove clearsilver/ASL 1.1 license (false detected in e.g. Flask)
+
 * Fri May 05 2017 Jiri Popelka <jpopelka@redhat.com> - 0.3-3
 - Remove 'Forbidden Phrase'
 - Raise OSLC_TRESHOLD
