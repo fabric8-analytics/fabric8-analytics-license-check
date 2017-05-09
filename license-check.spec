@@ -4,7 +4,7 @@
 Summary: Tool to find out project's licences
 Name:    license-check
 Version: 0.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: ASL 2.0
 URL:     https://github.com/fabric8-analytics/license-check
 
@@ -38,6 +38,10 @@ rm -f %{oslc_licenses_dir}{crc32,diffmark}.*
 %{_datadir}/%{name}/pelc-packages-fixtures-license.json
 
 %changelog
+* Fri May 05 2017 Jiri Popelka <jpopelka@redhat.com> - 0.3-3
+- Remove 'Forbidden Phrase'
+- Raise OSLC_TRESHOLD
+
 * Thu Apr 27 2017 Jiri Popelka <jpopelka@redhat.com> - 0.3-2
 - renamed to license-check
 

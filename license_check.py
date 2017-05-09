@@ -30,9 +30,11 @@ def parse_pelc_licenses(path):
             data = json.load(data_file)
             for d in data:
                 if d["model"] == "packages.licensevariant":
+                    # variants = {1: {'snia-1.1', 'snia-1.1-s'}, 2: {'cpl'}, ...}
                     variants[d["fields"]["license"]].update([d["fields"]["identifier"]])
 
                 if d["model"] == "packages.license":
+                    # short_names = {1: 'SNIA', 2: 'CPL', ...}
                     short_names[d["pk"]] = d["fields"]["short_name"]
     except IOError:
         print("Error: Unable to open license mapping file: %r" % os.path.abspath(path))
@@ -40,8 +42,10 @@ def parse_pelc_licenses(path):
 
     matching = {}
     for it, short_name in short_names.items():
-        for v in variants[it]:
-            matching[v] = short_name
+        for v in variants.get(it):
+            if v:
+                # matching = {'snia-1.1': 'SNIA', 'snia-1.1-s': 'SNIA', 'cpl': 'CPL', ...}
+                matching[v] = short_name
 
     return matching
 
@@ -53,6 +57,10 @@ def get_pelc_license_name(lic, pelc_license_mapping):
         print("Error: unknown to PELC license %r" % lic)
         pelc_license_name = lic + " (unknown to PELC)"
     return pelc_license_name
+
+
+def unwanted_license(short_name):
+    return short_name in ['Forbidden Phrase']
 
 
 def parse_oslc_output(source, output, result, pelc_license_mapping):
@@ -82,7 +90,7 @@ def parse_oslc_output(source, output, result, pelc_license_mapping):
     P_LICENSE_STATS = 4
     P_FILES = 5
 
-    OSLC_TRESHOLD = 0
+    OSLC_TRESHOLD = 33
 
     status = P_BEGIN
     lnumber = 0
@@ -126,13 +134,15 @@ def parse_oslc_output(source, output, result, pelc_license_mapping):
                 status = P_FILES
                 continue
             try:
-                licence_info = line.split()
-                variant_id = licence_info[0]
+                license_info = line.split()
+                variant_id = license_info[0]
                 license_name = get_pelc_license_name(variant_id,
                                                      pelc_license_mapping)
+                if unwanted_license(license_name):
+                    continue
                 result['license_stats'].append({'variant_id': variant_id,
-                                                'license_name':license_name,
-                                                'count': int(licence_info[1])})
+                                                'license_name': license_name,
+                                                'count': int(license_info[1])})
             except (KeyError, ValueError):
                 print("Error: bad format of LICENSE STATS output on line {}:".format(lnumber))
                 print(line)
@@ -149,49 +159,53 @@ def parse_oslc_output(source, output, result, pelc_license_mapping):
                 # split according last ':' character
                 lp = line.split(':')
                 fname = ':'.join(lp[:-1])
-                licences = lp[-1]
+                licenses = lp[-1].strip()
 
-                # start with empty list of licences
-                result_licences = []
+                # start with empty list of licenses
+                result_licenses = []
 
                 # Ignore empty lines and those where output indicates no matches
-                if (not len(licences.strip()) or
+                if (not len(licenses) or
                         re.search(': No matches$', line)):
                     continue
 
                 # split information for particular licenses for specific file
                 license_match = None
                 per_file_pattern = '([\w\._-]+) \(([0-9]+)%\)( incompatible with \(([^\)*]+)\))?'
-                for license_match in re.finditer(per_file_pattern, licences):
+                for license_match in re.finditer(per_file_pattern, licenses):
                     match = int(license_match.group(2))
                     if match < OSLC_TRESHOLD:
                         continue
                     variant_id = license_match.group(1)
                     license_name = get_pelc_license_name(variant_id,
                                                          pelc_license_mapping)
+                    if unwanted_license(license_name):
+                        continue
                     license_info = {'variant_id': variant_id,
                                     'license_name': license_name,
                                     'match': match}
-                    result_licences.append(license_info)
+                    result_licenses.append(license_info)
                 if license_match is None:
                     # sometimes there is no percent from unknown reason, in that case
                     # split it only and check whether it matches some file
-                    if licences.find('incompatible') == -1:
-                        for lic in licences.split(','):
+                    if licenses.find('incompatible') == -1:
+                        for lic in licenses.split(','):
                             sample_path = '/usr/share/oslc-3.0/licenses/{0}.txt'
                             variant_id = lic.strip()
                             if os.path.exists(sample_path.format(variant_id)):
                                 license_name = get_pelc_license_name(variant_id,
                                                                      pelc_license_mapping)
+                                if unwanted_license(license_name):
+                                    continue
                                 license_info = {'variant_id': variant_id,
                                                 'license_name': license_name}
-                                result_licences.append(license_info)
+                                result_licenses.append(license_info)
 
-                if len(result_licences) > 0:
+                if len(result_licenses) > 0:
                     # either add license to existing list or create new list
-                    if not fname in result['files']:
+                    if fname not in result['files']:
                         result['files'][fname] = []
-                    result['files'][fname] += result_licences
+                    result['files'][fname] += result_licenses
 
             except (KeyError, ValueError):
                 print("Error: bad format of FILES output on line {}:".format(lnumber))
