@@ -30,7 +30,7 @@ cp -av pelc-packages-fixtures-license.json %{buildroot}%{_datadir}/%{name}
 
 %posttrans
 # remove some weird license matches that produce too many false positives
-rm -f /usr/share/oslc-3.0/licenses/{crc32,diffmark,license-f,copyright-f}.*
+rm -f %{oslc_licenses_dir}{crc32,diffmark,license-f,copyright-f,clearsilver}.*
 
 %files
 %doc README.md
@@ -40,6 +40,7 @@ rm -f /usr/share/oslc-3.0/licenses/{crc32,diffmark,license-f,copyright-f}.*
 %changelog
 * Tue May 09 2017 Jiri Popelka <jpopelka@redhat.com> - 0.3-4
 - Fix the 'Forbidden Phrase' issue in oslc
+- Remove clearsilver/ASL 1.1 license (false detected in e.g. Flask)
 
 * Fri May 05 2017 Jiri Popelka <jpopelka@redhat.com> - 0.3-3
 - Remove 'Forbidden Phrase'
