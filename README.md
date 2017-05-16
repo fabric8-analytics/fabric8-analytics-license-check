@@ -1,3 +1,4 @@
+<a href="https://copr.fedorainfracloud.org/coprs/jpopelka/license-check/package/license-check/"><img src="https://copr.fedorainfracloud.org/coprs/jpopelka/license-check/package/license-check/status_image/last_build.png" /></a>
 # License check
 
 Goal of this tool is to find out licences used by project and potentially some licences issues.
