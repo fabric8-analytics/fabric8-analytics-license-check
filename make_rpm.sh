@@ -16,6 +16,7 @@ tar=$(./make_archive.sh)
 mkdir -p "${RPMBUILD_DIR}/SOURCES/" "${RPMBUILD_DIR}/SPECS/"
 cp "$tar" "${RPMBUILD_DIR}/SOURCES/"
 cp -f $NAME.spec "${RPMBUILD_DIR}/SPECS/"
+rm "${RPMBUILD_DIR}/SPECS/SRPMS/license-check-*.src.rpm"
 
 if [ "$1" == "--source" ] ; then
     echo "rpmbuild -bs ${RPMBUILD_DIR}/SPECS/$NAME.spec"
