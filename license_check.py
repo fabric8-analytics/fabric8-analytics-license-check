@@ -86,7 +86,9 @@ def parse_oslc_output(source, output, result, pelc_license_mapping):
     P_LICENSE_STATS = 4
     P_FILES = 5
 
-    OSLC_TRESHOLD = 33
+    # Licenses detected with probability less than OSLC_TRESHOLD are dismissed.
+    # Value is based on some observations.
+    OSLC_TRESHOLD = 39
 
     status = P_BEGIN
     lnumber = 0
